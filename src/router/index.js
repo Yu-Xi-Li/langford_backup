@@ -21,9 +21,9 @@ const routes = [
         component: () => import('../views/LogList/index')
       },
       {
-        path: '/Reward',
-        name: 'Reward',
-        component: () => import('../views/Reward/index')
+        path: '/BaseInfo',
+        name: 'BaseInfo',
+        component: () => import('../views/BaseInfo/index')
       },
       {
         path: '/Sponsor',

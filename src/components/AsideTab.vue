@@ -41,11 +41,11 @@
             index: '2'
           },
           {
-            path: '/Reward',
-            name: 'Reward',
+            path: '/BaseInfo',
+            name: 'BaseInfo',
             label: '基础信息管理',
             icon: 'medal',
-            url: 'Reward/Reward',
+            url: 'BaseInfo/BaseInfo',
             index: '3'
           },
           {
