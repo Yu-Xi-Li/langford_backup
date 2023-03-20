@@ -44,22 +44,7 @@
         <div slot="header">
           <span>发布的文章</span>
         </div>
-        <div class="logContent">
-          <a href="">文章标题</a>
-          <p class="logInfo">
-            <span>审核状态：未通过</span>
-            <span>作者：羽夕</span>
-          </p>
-          <el-divider/>
-        </div>
-        <div class="logContent">
-          <a href="">文章标题</a>
-          <p class="logInfo">
-            <span>审核状态：未通过</span>
-            <span>作者：羽夕</span>
-          </p>
-          <el-divider/>
-        </div>
+        <log-model v-for="i in logData.length" :key="i" :logData="this.logData"></log-model>
       </el-card>
     </div>
     <!-- 修改的文章 -->
@@ -68,22 +53,7 @@
         <div slot="header">
           <span>修改的文章</span>
         </div>
-        <div class="logContent">
-          <a href="">文章标题</a>
-          <p class="logInfo">
-            <span>审核状态：未通过</span>
-            <span>作者：羽夕</span>
-          </p>
-          <el-divider/>
-        </div>
-        <div class="logContent">
-          <a href="">文章标题</a>
-          <p class="logInfo">
-            <span>审核状态：未通过</span>
-            <span>作者：羽夕</span>
-          </p>
-          <el-divider/>
-        </div>
+        <log-model v-for="i in logData.length" :key="i" :logData="this.logData"></log-model>
       </el-card>
     </div>
     <!-- 收藏的文章 -->
@@ -92,29 +62,16 @@
         <div slot="header">
           <span>收藏的文章</span>
         </div>
-        <div class="logContent">
-          <a href="">文章标题</a>
-          <p class="logInfo">
-            <span>收藏时间：2022-02-22</span>
-            <span>作者：羽夕</span>
-          </p>
-          <el-divider/>
-        </div>
-        <div class="logContent">
-          <a href="">文章标题</a>
-          <p class="logInfo">
-            <span>收藏时间：2022-02-22</span>
-            <span>作者：羽夕</span>
-          </p>
-          <el-divider/>
-        </div>
+        <log-model v-for="i in logData.length" :key="i" :logData="this.logData"></log-model>
       </el-card>
     </div>
   </div>
 </template>
 <script>
 import { getUserData } from '../../../api/data'
+import LogModel from '../../components/LogModel.vue'
 export default {
+  components: { LogModel },
   name: 'User',
   data() {
     return {
@@ -137,6 +94,10 @@ export default {
         userId: 0,          // 所属用户id
         vegetable: "",      // 蔬菜
         water: ""           // 水质
+      },
+      logData: {
+        title:''
+
       }
     }
   },
@@ -186,19 +147,6 @@ export default {
       margin: 15px 10px;
     }
   }
-  }
-}
-.logContent {
-  a {
-    font-size: 18px;
-  }
-  .logInfo {
-    display: flex;
-    justify-content: flex-end;
-    // margin: 0;
-    span{
-      margin:  0 30px;
-    }
   }
 }
 </style>

@@ -33,11 +33,11 @@
             index: '1'
           },
           {
-            path: '/TeamMatch',
-            name: 'TeamMatch',
+            path: '/LogList',
+            name: 'LogList',
             label: '内容中心（文章管理）',
             icon: 'video-play',
-            url: 'TeamMatch/TeamMatch',
+            url: 'LogList/LogList',
             index: '2'
           },
           {

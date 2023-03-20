@@ -16,9 +16,9 @@ const routes = [
         component: () => import('../views/User/index')
       },
       {
-        path: '/TeamMatch',
-        name: 'TeamMatch',
-        component: () => import('../views/TeamMatch/index')
+        path: '/LogList',
+        name: 'LogList',
+        component: () => import('../views/LogList/index')
       },
       {
         path: '/Reward',
