@@ -44,7 +44,7 @@
         <div slot="header">
           <span>发布的文章</span>
         </div>
-        <log-model v-for="i in logData.length" :key="i" :logData="this.logData"></log-model>
+        <LogModel v-for="i in logData.length" :key="i" :logData="this.logData"></LogModel>
       </el-card>
     </div>
     <!-- 修改的文章 -->
@@ -53,7 +53,7 @@
         <div slot="header">
           <span>修改的文章</span>
         </div>
-        <log-model v-for="i in logData.length" :key="i" :logData="this.logData"></log-model>
+        <LogModel v-for="i in logData.length" :key="i" :logData="this.logData"></LogModel>
       </el-card>
     </div>
     <!-- 收藏的文章 -->
@@ -62,13 +62,14 @@
         <div slot="header">
           <span>收藏的文章</span>
         </div>
-        <log-model v-for="i in logData.length" :key="i" :logData="this.logData"></log-model>
+        <LogModel v-for="i in logData.length" :key="i" :logData="this.logData"></LogModel>
       </el-card>
     </div>
   </div>
 </template>
 <script>
 import { getUserData } from '../../../api/data'
+import { _post } from '../../../utils/request'
 import LogModel from '../../components/LogModel.vue'
 export default {
   components: { LogModel },
@@ -76,25 +77,28 @@ export default {
   data() {
     return {
       userData: {
-        useNname: '羽夕',
-        userPhone: '18188888888',
-        userPsw: '111111',
-        newPsw: '',
-        againPsw: '',
+        id:'',
+        name: '羽夕', // 用户名
+        accountNumber: '18188888888', // 手机号
+        password: '111111', // 密码
+        committee: 0,   // 委员会
+        administrator: 0,// 管理员
+        newPsw: '',     // 新密码
+        againPsw: '',   // 重复密码
         PersonID: '管理员'
       },
-      blogData: {
-        auditStatus: 0,     // 审核状态
-        disease: "",        // 疾害
-        fertilizer: "",     // 肥料
-        id: 0,              // 文章id
-        insect: "",         // 虫害
-        soil: "",           // 土壤
-        updateUser: "",     // 最后修改用户
-        userId: 0,          // 所属用户id
-        vegetable: "",      // 蔬菜
-        water: ""           // 水质
-      },
+      // blogData: {
+      //   auditStatus: 0,     // 审核状态
+      //   disease: "",        // 疾害
+      //   fertilizer: "",     // 肥料
+      //   id: 0,              // 文章id
+      //   insect: "",         // 虫害
+      //   soil: "",           // 土壤
+      //   updateUser: "",     // 最后修改用户
+      //   userId: 0,          // 所属用户id
+      //   vegetable: "",      // 蔬菜
+      //   water: ""           // 水质
+      // },
       logData: {
         title:''
 
@@ -102,13 +106,9 @@ export default {
     }
   },
   mounted() {
-    getUserData().then(res => {
-      // console.log(res);
-      if (res.status === 200) {
-        this.tableData = res.data;
-      }
-      const a = 1
-      console.log(a);
+    this.userData = getUserData({
+      accountNumber: '1',
+      password: '1'
     })
   },
   methods: {
