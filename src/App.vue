@@ -4,7 +4,23 @@
     <router-view/>
   </div>
 </template>
+<script>
+  export default {
+    data(){
+      return {
 
+      }
+    },
+    created(){
+
+    },
+    methods:{
+      getLoginData(){
+        localStorage.getItem('user')
+      }
+    }
+  }
+</script>
 <style lang="scss">
 html,body{
   margin: 0;

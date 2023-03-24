@@ -3,37 +3,33 @@
     <!-- 个人信息&资料修改 -->
     <div class="userInfo firstCard">
       <el-card class="userCard" header="个人信息">
-        <div class="userInfoCard">
-          <div>
-            <span>用户昵称：</span>
-            <span>{{ userData.useNname }}</span>
-          </div>
-          <div>
-            <span>手机号码：</span>
-            <span>{{ userData.userPhone }}</span>
-          </div>
-          <div>
-            <span>用户身份：</span>
-            <span>{{ userData.PersonID }}</span>
-          </div>
-        </div>
+        <el-descriptions :column=1 title="个人信息">
+          <el-descriptions-item label="用户名">{{ this.userData.username }}</el-descriptions-item>
+          <el-descriptions-item label="手机号">{{ this.userData.accountNumber }}</el-descriptions-item>
+          <el-descriptions-item label="用户身份">
+            <el-tag size="small">{{ this.userData.administrator === 1 ? "管理员" : this.userData.committee === 1 ? "委员会" : "普通用户" }}</el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="委员会状态">
+            <el-tag size="small">{{ getCommitteeAuditState(this.userData.committeeAuditState) }}</el-tag>
+          </el-descriptions-item>
+        </el-descriptions>
       </el-card>
       <el-card class="userCard" header="修改资料">
-        <el-form  label-width="80px" :model="userData">
-          <el-form-item label="昵称">
-            <el-input v-model="userData.useNname"></el-input>
+        <el-form :model="form" :rules="rules" ref="form" label-width="80px">
+          <el-form-item label="用户名" prop="username">
+            <el-input v-model.trim="form.username" placeholder="请输入用户名"></el-input>
           </el-form-item>
-          <el-form-item label="手机号">
-            <el-input v-model="userData.userPhone"></el-input>
+          <el-form-item label="手机号" prop="accountNumber">
+            <el-input disabled v-model.trim="form.accountNumber" placeholder="请输入手机号"></el-input>
           </el-form-item>
-          <el-form-item label="新密码">
-            <el-input v-model="userData.userPsw"></el-input>
+          <el-form-item label="密码" prop="password">
+            <el-input type="password" v-model.trim="form.password" placeholder="请输入密码"></el-input>
           </el-form-item>
-          <el-form-item label="确认密码">
-            <el-input v-model="userData.againPsw"></el-input>
+          <el-form-item label="确认密码" prop="confirmPassword">
+            <el-input type="password" v-model.trim="form.confirmPassword" placeholder="请再次输入密码"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm()">提交</el-button>
+            <el-button type="primary" @click="againLogon">提交修改</el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -69,23 +65,25 @@
 </template>
 <script>
 import { getUserData } from '../../../api/data'
-import { _post } from '../../../utils/request'
 import LogModel from '../../components/LogModel.vue'
 export default {
   components: { LogModel },
   name: 'User',
   data() {
     return {
+      form: {
+          username: localStorage.getItem('name'),
+          accountNumber:localStorage.getItem('accountNumber'),
+          password: '',
+          confirmPassword: ''
+        },
       userData: {
-        id:'',
-        name: '羽夕', // 用户名
-        accountNumber: '18188888888', // 手机号
-        password: '111111', // 密码
-        committee: 0,   // 委员会
-        administrator: 0,// 管理员
-        newPsw: '',     // 新密码
-        againPsw: '',   // 重复密码
-        PersonID: '管理员'
+        id: localStorage.getItem('id'),
+        username: localStorage.getItem('name'), // 用户名
+        accountNumber: localStorage.getItem('accountNumber'), // 手机号
+        committee: localStorage.getItem('committee'),    // 委员会
+        administrator: localStorage.getItem('administrator'),   // 管理员
+        committeeAuditState: localStorage.getItem('committeeAuditState')  // 委员会状态
       },
       // blogData: {
       //   auditStatus: 0,     // 审核状态
@@ -102,6 +100,40 @@ export default {
       logData: {
         title:''
 
+      },
+      rules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        accountNumber:[
+          { required: true, message: '请输入手机号', trigger: 'blur' },
+          {
+              validator: (rule, value, callback) => {
+                  const regex = /^1[3-9]\d{9}$/;
+                  if (regex.test(value)) {
+                      callback();
+                  } else {
+                      callback(new Error('请输入有效的手机号！'));
+                  }
+              }
+          }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ],
+        confirmPassword: [
+          { required: true, message: '请再次输入密码', trigger: 'blur' },
+          {
+            validator: (rule, value, callback) => {
+              if (value !== this.form.password) {
+                callback(new Error('两次输入的密码不一致'));
+              } else {
+                callback();
+              }
+            },
+            trigger: 'blur'
+          }
+        ]
       }
     }
   },
@@ -112,8 +144,46 @@ export default {
     })
   },
   methods: {
-    submitForm(){
+    // 获取用户委员会审核状态
+    getCommitteeAuditState(committeeAuditState) {
+      if(committeeAuditState){
+        switch (committeeAuditState) {
+          case 0:
+            return "未审核";
+          case 1:
+            return "审核通过";
+          case 2:
+            return "审核未通过";
+          case 3:
+            return "未提交";
+          default:
+            return "状态异常";
+        }
+      }else{
+        console.log(2222222)
+      }
+      
+    },
 
+    // 修改信息
+    againLogon(){
+      if(this.form.password.length>0 && this.form.password === this.form.confirmPassword){
+        userLogon({
+            name: this.form.username,
+            accountNumber:this.form.accountNumber,
+            password: this.form.password
+        }).then(data => {
+            if(data.code === 0){
+                this.$message({
+                    message:'登录成功,2秒后跳转登录页面',
+                    type: 'success'
+                })
+                setTimeout(() => {
+                    this.$router.push('/login')
+                }, 2000);
+            };
+        });
+      };
     }
   },
 }
