@@ -1,6 +1,6 @@
 <template>
     <el-menu class="el-menu-vertical-demo" background-color="#545c64" text-color="#eee" active-text-color="#ffd04b" :collapse="isCollapse">
-        <h3>{{isCollapse ? '系统' : '有机蔬菜种植技术动态查询系统'}}</h3>
+        <h3>{{isCollapse ? '系统' : '种植技术动态查询系统'}}</h3>
         <el-menu-item @click="clickMenu(item)" v-for="item in noChildren" :index="item.path" :key="item.path" >
             <i :class="'el-icon-' + item.icon"></i>
             <span slot="title">{{item.label}}</span>
@@ -35,7 +35,7 @@
           {
             path: '/LogList',
             name: 'LogList',
-            label: '内容中心（文章管理）',
+            label: '内容中心',
             icon: 'video-play',
             url: 'LogList/LogList',
             index: '2'
@@ -51,7 +51,7 @@
           {
             path: '/Sponsor',
             name: 'Sponsor',
-            label: '申请成为委员会',
+            label: '委员会申请',
             icon: 'notebook-2',
             url: 'Sponsor/Sponsor',
             index: '4'
@@ -59,7 +59,7 @@
           {
             path: '/Account',
             name: 'Account',
-            label: '管理员审核',
+            label: '居委会审核',
             icon: 'tickets',
             url: 'Account/Account',
             index: '5'

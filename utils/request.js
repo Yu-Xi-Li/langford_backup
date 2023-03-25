@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const http = axios.create({
-  baseURL: ' http://124.70.15.55:8099',
+  baseURL: 'https://709f3940f9.goho.co',
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json'

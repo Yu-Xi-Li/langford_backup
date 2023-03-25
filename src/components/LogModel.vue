@@ -1,22 +1,23 @@
 <template>
   <div>
-    <a href="">{{ title }}</a>
-    <p class="logInfo">
-    <span>审核状态：{{ isPass }}</span>
-    <span>作者：羽夕</span>
-    </p>
-    <el-divider/>
+    <el-card shadow="hover">
+      <span>{{ title ? "《"+title+"》" : '暂无标题' }}</span>
+      <p class="logInfo">
+      <!-- <span>审核状态：{{ isPass }}</span> -->
+      <span>作者：羽夕</span>
+      </p>
+    </el-card>
   </div>
 </template>
 
 <script>
 export default {
     props: {
-        logData: {
-            title: '',      // 文章标题
-            isPass: 0,      // 是否审核通过
-            author: ''      // 作者
-        }
+      title: '',      // 文章标题
+      author: '',      // 作者
+    },
+    methods:{
+      
     }
 }
 </script>

@@ -20,6 +20,11 @@ const routes = [
     component: Main,
     children: [
       {
+        path: '/BaseInfo',
+        name: 'BaseInfo',
+        component: () => import('../views/BaseInfo/index')
+      },
+      {
         path: '/User',
         name: 'User',
         component: () => import('../views/User/index')
@@ -30,9 +35,9 @@ const routes = [
         component: () => import('../views/LogList/index')
       },
       {
-        path: '/BaseInfo',
-        name: 'BaseInfo',
-        component: () => import('../views/BaseInfo/index')
+        path: '/addLogList',
+        name: 'addLogList',
+        component: () => import('../views/addLogList/index')
       },
       {
         path: '/Sponsor',

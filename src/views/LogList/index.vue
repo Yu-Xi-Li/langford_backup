@@ -3,37 +3,52 @@
     <el-card class="logListContent" shadow="always">
       <div slot="header" class="logListTitle">
         <span>文章列表</span>
-        <el-button size="medium" type="primary" @click="goLogDetail(id)">发布文章</el-button>
+        <el-button size="medium" type="primary" @click="goAddLog()">新增文章</el-button>
       </div>
       <div class="LogList">
-        <ul class="infinite-list" v-infinite-scroll="load" infinite-scroll-distance="200px"  style="overflow:auto">
-          <li v-for="i in count" :key="i" class="infinite-list-item">
-            
-          </li>
+        <ul class="infinite-list"  v-for="log in logList" @click="goDetail(log.id)" :key="log.id" >
+          <LogModel   :title="log.title" :author="log.userAccount" >
+          </LogModel>
         </ul>
       </div>
     </el-card>
-    
+
   </div>
 </template>
 
 <script>
-import { getTeamMatchData } from '../../../api/data'
+import { getLogList } from '../../../api/data'
+import LogModel from '../../components/LogModel.vue';
 export default {
+  components:{
+    LogModel
+  },
   data() {
     return {
-      count: 0
+      pageNum: 1,
+      isLoading: false,
+      logList: []
     }
   },
-  mounted(){
-    getTeamMatchData()
+  mounted() {
+    getLogList({
+      pageSize: 200,
+      param: {
+        auditStatus: 1,
+      }
+    }).then((res) => {
+      if (res.code == 0) {
+        let data = res.result
+        this.logList = data.list
+      }
+    })
   },
   methods: {
-    load () {
-      this.count += 2
-    },
-    goLogDetail(e){
-      
+    goDetail(id){
+        this.$router.push(`/addLogList?id=${id}`)
+      },
+    goAddLog() {
+      this.$router.push(`/addLogList`)
     }
   },
 };
@@ -43,16 +58,19 @@ export default {
 .logListContent {
   height: 750px;
   margin: 30px 20px;
+
   .logListTitle {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
+
   .infinite-list {
-    height: 750px;
+    :hover{
+      cursor: pointer;
+    }
     li {
       list-style: none
     }
   }
-}
-</style>
+}</style>

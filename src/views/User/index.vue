@@ -3,11 +3,12 @@
     <!-- 个人信息&资料修改 -->
     <div class="userInfo firstCard">
       <el-card class="userCard" header="个人信息">
-        <el-descriptions :column=1 title="个人信息">
+        <el-descriptions :column=1 title="">
           <el-descriptions-item label="用户名">{{ this.userData.username }}</el-descriptions-item>
           <el-descriptions-item label="手机号">{{ this.userData.accountNumber }}</el-descriptions-item>
           <el-descriptions-item label="用户身份">
-            <el-tag size="small">{{ this.userData.administrator === 1 ? "管理员" : this.userData.committee === 1 ? "委员会" : "普通用户" }}</el-tag>
+            <el-tag size="small">{{ this.userData.administrator == 1 ? "管理员" : this.userData.committee == 1 ? "委员会" :
+              "普通用户" }}</el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="委员会状态">
             <el-tag size="small">{{ getCommitteeAuditState(this.userData.committeeAuditState) }}</el-tag>
@@ -22,8 +23,8 @@
           <el-form-item label="手机号" prop="accountNumber">
             <el-input disabled v-model.trim="form.accountNumber" placeholder="请输入手机号"></el-input>
           </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input type="password" v-model.trim="form.password" placeholder="请输入密码"></el-input>
+          <el-form-item label="新密码" prop="password">
+            <el-input type="password" v-model.trim="form.password" placeholder="请输入新密码"></el-input>
           </el-form-item>
           <el-form-item label="确认密码" prop="confirmPassword">
             <el-input type="password" v-model.trim="form.confirmPassword" placeholder="请再次输入密码"></el-input>
@@ -40,7 +41,12 @@
         <div slot="header">
           <span>发布的文章</span>
         </div>
-        <LogModel v-for="i in logData.length" :key="i" :logData="this.logData"></LogModel>
+        <el-table :data="logListData" style="width: 100%">
+          <el-table-column prop="id" label="ID"></el-table-column>
+          <el-table-column prop="title" label="标题"></el-table-column>
+          <el-table-column prop="auditStatus" label="审核状态"></el-table-column>
+          <el-table-column prop="score" label="认可率"></el-table-column>
+        </el-table>
       </el-card>
     </div>
     <!-- 修改的文章 -->
@@ -49,7 +55,12 @@
         <div slot="header">
           <span>修改的文章</span>
         </div>
-        <LogModel v-for="i in logData.length" :key="i" :logData="this.logData"></LogModel>
+        <el-table :data="fixedLogListData" style="width: 100%">
+          <el-table-column prop="id" label="ID"></el-table-column>
+          <el-table-column prop="title" label="标题"></el-table-column>
+          <el-table-column prop="auditStatus" label="审核状态"></el-table-column>
+          <el-table-column prop="score" label="认可率"></el-table-column>
+        </el-table>
       </el-card>
     </div>
     <!-- 收藏的文章 -->
@@ -64,7 +75,8 @@
   </div>
 </template>
 <script>
-import { getUserData } from '../../../api/data'
+import { log } from 'console'
+import { userAgainLogon, getLogByuser, getLogList } from '../../../api/data'
 import LogModel from '../../components/LogModel.vue'
 export default {
   components: { LogModel },
@@ -72,11 +84,11 @@ export default {
   data() {
     return {
       form: {
-          username: localStorage.getItem('name'),
-          accountNumber:localStorage.getItem('accountNumber'),
-          password: '',
-          confirmPassword: ''
-        },
+        username: localStorage.getItem('name'),
+        accountNumber: localStorage.getItem('accountNumber'),
+        password: '',
+        confirmPassword: ''
+      },
       userData: {
         id: localStorage.getItem('id'),
         username: localStorage.getItem('name'), // 用户名
@@ -85,6 +97,9 @@ export default {
         administrator: localStorage.getItem('administrator'),   // 管理员
         committeeAuditState: localStorage.getItem('committeeAuditState')  // 委员会状态
       },
+      logListData: [],
+      fixedLogListData:[],
+      collectLogListData:[],
       // blogData: {
       //   auditStatus: 0,     // 审核状态
       //   disease: "",        // 疾害
@@ -98,24 +113,24 @@ export default {
       //   water: ""           // 水质
       // },
       logData: {
-        title:''
+        title: ''
 
       },
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
-        accountNumber:[
+        accountNumber: [
           { required: true, message: '请输入手机号', trigger: 'blur' },
           {
-              validator: (rule, value, callback) => {
-                  const regex = /^1[3-9]\d{9}$/;
-                  if (regex.test(value)) {
-                      callback();
-                  } else {
-                      callback(new Error('请输入有效的手机号！'));
-                  }
+            validator: (rule, value, callback) => {
+              const regex = /^1[3-9]\d{9}$/;
+              if (regex.test(value)) {
+                callback();
+              } else {
+                callback(new Error('请输入有效的手机号！'));
               }
+            }
           }
         ],
         password: [
@@ -138,50 +153,58 @@ export default {
     }
   },
   mounted() {
-    this.userData = getUserData({
-      accountNumber: '1',
-      password: '1'
+    getLogByuser(localStorage.getItem('id')).then((res)=>{
+      this.logListData = res.result;
+    })
+    getLogList({id:this.userData.id,updateUserId:this.userData.id}).then((res)=>{
+      this.fixedLogListData = res.result.list
     })
   },
   methods: {
     // 获取用户委员会审核状态
     getCommitteeAuditState(committeeAuditState) {
-      if(committeeAuditState){
+      if (committeeAuditState) {
         switch (committeeAuditState) {
-          case 0:
-            return "未审核";
-          case 1:
-            return "审核通过";
-          case 2:
+          case '0':
+            return "申请已提交";
+          case '1':
+            return "委员会成员";
+          case '2':
             return "审核未通过";
-          case 3:
-            return "未提交";
+          case '3':
+            return "未提交申请";
           default:
             return "状态异常";
         }
-      }else{
-        console.log(2222222)
       }
-      
     },
 
+    // 获取用户所有文章
+
     // 修改信息
-    againLogon(){
-      if(this.form.password.length>0 && this.form.password === this.form.confirmPassword){
-        userLogon({
-            name: this.form.username,
-            accountNumber:this.form.accountNumber,
-            password: this.form.password
+    againLogon() {
+      if (this.form.password.length > 0 && this.form.password === this.form.confirmPassword) {
+        userAgainLogon({
+          name: this.form.username,
+          id: localStorage.getItem('id'),
+          accountNumber: this.form.accountNumber,
+          password: this.form.password
         }).then(data => {
-            if(data.code === 0){
-                this.$message({
-                    message:'登录成功,2秒后跳转登录页面',
-                    type: 'success'
-                })
-                setTimeout(() => {
-                    this.$router.push('/login')
-                }, 2000);
-            };
+          if (data.code === 0) {
+            this.$message({
+              message: '修改成功,2秒后跳转登录页面',
+              type: 'success'
+            })
+            localStorage.clear();
+            setTimeout(() => {
+              this.$router.push('/login')
+            }, 2000);
+          }else{
+            this.$message({
+              message: '修改失败,请重试',
+              type: 'error'
+            })
+          }
         });
       };
     }
@@ -191,32 +214,39 @@ export default {
 <style scoped lang="scss">
 .content {
   font-size: 16px;
+
   hr {
     color: #eeeeee;
   }
+
   a {
-    text-decoration:none;
+    text-decoration: none;
     color: black;
   }
-  .firstCard{
+
+  .firstCard {
     margin: 15px 0;
   }
-  .el-divider--horizontal{
+
+  .el-divider--horizontal {
     margin: 12px 0;
   }
 }
+
 .userInfo {
   display: flex;
   justify-content: space-between;
   gap: 20px;
+
   .userCard {
-    width: 600px;
-  .userInfoCard{
-    width: 400px;
-    div{
-      margin: 15px 10px;
+    width: 50%;
+
+    .userInfoCard {
+      width: 400px;
+
+      div {
+        margin: 15px 10px;
+      }
     }
   }
-  }
-}
-</style>
+}</style>
