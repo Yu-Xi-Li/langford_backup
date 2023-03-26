@@ -43,6 +43,39 @@ export const userAgainLogon = (params)=>{
         });
     })
 }
+// 发布文章
+export const addLog = (params)=>{
+    return new Promise((resolve, reject) => {
+        http.post('/article/insert',params).then(data=>{
+            resolve(data);
+        }).catch((error) => {
+        // 失败时，将错误信息通过 reject 函数传递出去
+            reject(error);
+        });
+    })
+}
+// 修改文章
+export const updateLog = (params)=>{
+    return new Promise((resolve, reject) => {
+        http.post('/article/update',params).then(data=>{
+            resolve(data);
+        }).catch((error) => {
+        // 失败时，将错误信息通过 reject 函数传递出去
+            reject(error);
+        });
+    })
+}
+// 审核文章
+export const auditLog = (params)=>{
+    return new Promise((resolve, reject) => {
+        http.post('/article/audit',params).then(data=>{
+            resolve(data);
+        }).catch((error) => {
+        // 失败时，将错误信息通过 reject 函数传递出去
+            reject(error);
+        });
+    })
+}
 // 获取所有文章列表
 export const getLogList = (params)=>{
     return new Promise((resolve, reject) => {
@@ -57,7 +90,7 @@ export const getLogList = (params)=>{
 // 通过文章id查询文章
 export const getLogDetail = (id)=>{
     return new Promise((resolve, reject) => {
-        http.get(`/article/selectArticleById/${id}`).then(data=>{
+        http.get(`/article/selectByArticleId/${id}`).then(data=>{
             resolve(data);
         }).catch((error) => {
         // 失败时，将错误信息通过 reject 函数传递出去
@@ -65,12 +98,44 @@ export const getLogDetail = (id)=>{
         });
     })
 }
-// 通过用户id查询文章
+// 通过用户id查询所有文章
 export const getLogByuser = (id)=>{
     return new Promise((resolve, reject) => {
         http.get(`/article/selectOne/${id}`).then(data=>{
             resolve(data);
         }).catch((error) => {
+            reject(error);
+        });
+    })
+}
+// 通过用户id查询收藏文章
+export const getCollectLogByuser = (id)=>{
+    return new Promise((resolve, reject) => {
+        http.get(`/collect/selectOne/${id}`).then(data=>{
+            resolve(data);
+        }).catch((error) => {
+            reject(error);
+        });
+    })
+}
+// 删除收藏
+export const deleteCollect = (params)=>{
+    return new Promise((resolve, reject) => {
+        http.delete(`/collect/delete?idList=${params}`).then(data=>{
+            resolve(data);
+        }).catch((error) => {
+        // 失败时，将错误信息通过 reject 函数传递出去
+            reject(error);
+        });
+    })
+}
+// 新增收藏
+export const addCollect = (params)=>{
+    return new Promise((resolve, reject) => {
+        http.post('/collect/insert',params).then(data=>{
+            resolve(data);
+        }).catch((error) => {
+        // 失败时，将错误信息通过 reject 函数传递出去
             reject(error);
         });
     })
@@ -86,10 +151,10 @@ export const getFoundInfoList = (params)=>{
         });
     })
 }
-// 发布文章
-export const addLog = (params)=>{
+// 新增/修改基础信息列表
+export const addFoundInfoList = (params)=>{
     return new Promise((resolve, reject) => {
-        http.post('/article/insert',params).then(data=>{
+        http.post('/foundationInfo/insertFoundationInfo',params).then(data=>{
             resolve(data);
         }).catch((error) => {
         // 失败时，将错误信息通过 reject 函数传递出去
@@ -97,10 +162,10 @@ export const addLog = (params)=>{
         });
     })
 }
-// 修改文章
-export const updateLog = (params)=>{
+// 删除留言
+export const deleteMessage = (params)=>{
     return new Promise((resolve, reject) => {
-        http.post('/article/insert',params).then(data=>{
+        http.detele('/leaveMessage/delete',params).then(data=>{
             resolve(data);
         }).catch((error) => {
         // 失败时，将错误信息通过 reject 函数传递出去
@@ -108,6 +173,14 @@ export const updateLog = (params)=>{
         });
     })
 }
-export const getUserData =(params) => {
-    
+// 新增留言
+export const addMessage = (params)=>{
+    return new Promise((resolve, reject) => {
+        http.post('/leaveMessage/insert',params).then(data=>{
+            resolve(data);
+        }).catch((error) => {
+        // 失败时，将错误信息通过 reject 函数传递出去
+            reject(error);
+        });
+    })
 }

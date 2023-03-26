@@ -1,44 +1,44 @@
 <template>
   <div style="display: flex;">
     <el-card style="width: 65%;margin:20px;justify-content: space-between">
-        <el-table style="margin:20px 0" :data="tableData.fertilizerInfo" border>
-          <el-table-column prop="fertilizer" label="肥料"></el-table-column>
+        <el-table style="margin:20px 0" :data="tableData.fertilizerInfo.filter(item => item.auditStatus == 1)" border>
+          <el-table-column prop="value" label="肥料"></el-table-column>
           <el-table-column prop="updateUserAccount" label="更新人"></el-table-column>
           <el-table-column prop="updateTime" label="更新时间"></el-table-column>
           <el-table-column prop="auditStatus" label="审核状态"></el-table-column>
         </el-table>
-        <el-table style="margin:20px 0" :data="tableData.insectInfo" border>
-          <el-table-column prop="insectPest" label="虫害"></el-table-column>
+        <el-table style="margin:20px 0" :data="tableData.insectInfo.filter(item => item.auditStatus == 1)" border>
+          <el-table-column prop="value" label="虫害"></el-table-column>
           <el-table-column prop="updateUserAccount" label="更新人"></el-table-column>
           <el-table-column prop="updateTime" label="更新时间"></el-table-column>
           <el-table-column prop="auditStatus" label="审核状态"></el-table-column>
         </el-table>
-        <el-table style="margin:20px 0" :data="tableData.soilInfo" border>
-          <el-table-column prop="soil" label="土壤"></el-table-column>
+        <el-table style="margin:20px 0" :data="tableData.soilInfo.filter(item => item.auditStatus == 1)" border>
+          <el-table-column prop="value" label="土壤"></el-table-column>
           <el-table-column prop="updateUserAccount" label="更新人"></el-table-column>
           <el-table-column prop="updateTime" label="更新时间"></el-table-column>
           <el-table-column prop="auditStatus" label="审核状态"></el-table-column>
         </el-table>
-        <el-table style="margin:20px 0" :data="tableData.vegetableInfo" border>
-          <el-table-column prop="vegetableName" label="蔬菜"></el-table-column>
+        <el-table style="margin:20px 0" :data="tableData.vegetableInfo.filter(item => item.auditStatus == 1)" border>
+          <el-table-column prop="value" label="蔬菜"></el-table-column>
           <el-table-column prop="updateUserId" label="更新人"></el-table-column>
           <el-table-column prop="updateTime" label="更新时间"></el-table-column>
           <el-table-column prop="auditStatus" label="审核状态"></el-table-column>
         </el-table>
-        <el-table style="margin:20px 0" :data="tableData.waterInfo" border>
-          <el-table-column prop="waterQuality" label="水质"></el-table-column>
+        <el-table style="margin:20px 0" :data="tableData.waterInfo.filter(item => item.auditStatus == 1)" border>
+          <el-table-column prop="value" label="水质"></el-table-column>
           <el-table-column prop="updateUserId" label="更新人"></el-table-column>
           <el-table-column prop="updateTime" label="更新时间"></el-table-column>
           <el-table-column prop="auditStatus" label="审核状态"></el-table-column>
         </el-table>
-        <el-table style="margin:20px 0" :data="tableData.diseaseInfo" border>
-          <el-table-column prop="disease" label="疾病"></el-table-column>
+        <el-table style="margin:20px 0" :data="tableData.diseaseInfo.filter(item => item.auditStatus == 1)" border>
+          <el-table-column prop="value" label="疾病"></el-table-column>
           <el-table-column prop="updateUserAccount" label="更新人"></el-table-column>
           <el-table-column prop="updateTime" label="更新时间"></el-table-column>
           <el-table-column prop="auditStatus" label="审核状态"></el-table-column>
         </el-table>
       </el-card>
-      <el-card style="width: 30%;margin:20px;height: 300px;" >
+      <el-card style="width: 30%;margin:20px;height: 350px;" >
         <div slot="header">
           <span>新增基础信息</span>
         </div>
@@ -46,7 +46,7 @@
             <el-form>
               <el-form-item label="所属分类">
                 <el-select v-model="selectedType" placeholder="请选择">
-                  <el-option v-for="(value, key) in tableData" :key="key" :label="key" :value="key"></el-option>
+                  <el-option v-for="(value, key) in tableData" :key="key" :label="getLable(key)" :value="key"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="内容">
@@ -54,7 +54,7 @@
               </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-              <el-button type="primary" @click="addItem">确认新增</el-button>
+              <el-button type="primary" @click="addFoundInfo()">确认新增</el-button>
             </div>
         </div>
       </el-card>
@@ -62,28 +62,74 @@
   </div>
 </template>
 <script>
-import { getFoundInfoList } from '../../../api/data';
+import { getFoundInfoList, addFoundInfoList } from '../../../api/data';
 export default {
   data() {
     return {
-      tableData: {
-      },
+      tableData: {},
       selectedType: "",
-      newItem: ""
+      newItem: "",
+      summitData:{
+        "diseaseInfo": [],
+        "fertilizerInfo": [],
+        "insectInfo": [],
+        "soilInfo": [],
+        "vegetableInfo": [],
+        "waterInfo": []
+      },
+      CE:{
+        "疾病": "diseaseInfo",
+        "肥料": "fertilizerInfo",
+        "昆虫": "insectInfo",
+        "土壤": "soilInfo",
+        "蔬菜": "vegetableInfo",
+        "水": "waterInfo"
+      }
     };
   },
   mounted(){
     getFoundInfoList().then((res)=>{
       this.tableData = res.result
-      
-  })
+    })
   },
   methods: {
-    addItem() {
+    getLable(e){
+        switch (e) {
+          case 'diseaseInfo':
+            return "疾病";
+          case 'fertilizerInfo':
+            return "肥料";
+          case 'insectInfo':
+            return "昆虫";
+          case 'soilInfo':
+            return "土壤";
+          case 'vegetableInfo':
+            return "蔬菜";
+          case 'waterInfo':
+            return "水";
+          default:
+            return "状态异常";
+        }
+    },
+    addFoundInfo() {
       if (this.selectedType && this.newItem) {
-        this.data[this.selectedType].push({ id: this.tableData[this.selectedType].length + 1, [this.selectedType.slice(0, -1)]: this.newItem, updateUserAccount: null, updateTime: null, auditStatus: 0 });
-        this.selectedType = "";
-        this.newItem = "";
+        this.summitData[this.selectedType] = [{
+          "auditStatus": 0,
+          "id": 0,
+          "updateTime": "",
+          "updateUserAccount": localStorage.getItem('accountNumber'),
+          "value": this.newItem,
+        }]
+        addFoundInfoList(this.summitData).then((res)=>{
+          if(res.code == 0){
+            this.selectedType = '',
+            this.newItem= '',
+            this.$message({
+              type: 'success',
+              message: '新增成功，请等待审核通过'
+            })
+          }
+        })
       }
     }
   }

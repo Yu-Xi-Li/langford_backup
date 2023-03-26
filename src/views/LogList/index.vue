@@ -6,7 +6,7 @@
         <el-button size="medium" type="primary" @click="goAddLog()">新增文章</el-button>
       </div>
       <div class="LogList">
-        <ul class="infinite-list"  v-for="log in logList" @click="goDetail(log.id)" :key="log.id" >
+        <ul class="infinite-list"  v-for="log in logList" @click="goDetail(log.id,log.title)" :key="log.id" >
           <LogModel   :title="log.title" :author="log.userAccount" >
           </LogModel>
         </ul>
@@ -39,13 +39,13 @@ export default {
     }).then((res) => {
       if (res.code == 0) {
         let data = res.result
-        this.logList = data.list
+        this.logList = data.list.filter(item => item.auditStatus == 1)
       }
     })
   },
   methods: {
-    goDetail(id){
-        this.$router.push(`/addLogList?id=${id}`)
+    goDetail(id,title){
+        this.$router.push(`/addLogList?id=${id}&title=${title}`)
       },
     goAddLog() {
       this.$router.push(`/addLogList`)
@@ -56,7 +56,6 @@ export default {
 
 <style scoped lang="scss">
 .logListContent {
-  height: 750px;
   margin: 30px 20px;
 
   .logListTitle {

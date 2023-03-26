@@ -44,8 +44,17 @@
         <el-table :data="logListData" style="width: 100%">
           <el-table-column prop="id" label="ID"></el-table-column>
           <el-table-column prop="title" label="标题"></el-table-column>
-          <el-table-column prop="auditStatus" label="审核状态"></el-table-column>
           <el-table-column prop="score" label="认可率"></el-table-column>
+          <el-table-column prop="createDate" label="发布时间"></el-table-column>
+          <el-table-column prop="auditStatus" label="审核状态"></el-table-column>
+          <el-table-column
+            fixed="right"
+            label="操作"
+            width="200">
+            <template slot-scope="scope">
+              <el-button @click="handleClick(scope.row.id,scope.row.title)" type="primary" size="small">查看详情</el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </el-card>
     </div>
@@ -60,6 +69,14 @@
           <el-table-column prop="title" label="标题"></el-table-column>
           <el-table-column prop="auditStatus" label="审核状态"></el-table-column>
           <el-table-column prop="score" label="认可率"></el-table-column>
+          <el-table-column
+            fixed="right"
+            label="操作"
+            width="200">
+            <template slot-scope="scope">
+              <el-button @click="handleClick(scope.row.id,scope.row.title)" type="primary" size="small">查看详情</el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </el-card>
     </div>
@@ -69,14 +86,27 @@
         <div slot="header">
           <span>收藏的文章</span>
         </div>
-        <LogModel v-for="i in logData.length" :key="i" :logData="this.logData"></LogModel>
+        <el-table :data="collectLogListData" style="width: 100%">
+          <el-table-column prop="collectArticleId" label="ID"></el-table-column>
+          <el-table-column prop="title" label="标题"></el-table-column>
+          <el-table-column prop="createDate" label="发布时间"></el-table-column>
+          <el-table-column prop="score" label="认可率"></el-table-column>
+          <el-table-column
+            fixed="right"
+            label="操作"
+            width="200">
+            <template slot-scope="scope">
+              <el-button @click="handleClick(scope.row.collectArticleId,scope.row.title)" type="primary" size="small">查看详情</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-card>
     </div>
   </div>
 </template>
 <script>
 import { log } from 'console'
-import { userAgainLogon, getLogByuser, getLogList } from '../../../api/data'
+import { userAgainLogon, getLogByuser, getLogList, getCollectLogByuser } from '../../../api/data'
 import LogModel from '../../components/LogModel.vue'
 export default {
   components: { LogModel },
@@ -156,8 +186,11 @@ export default {
     getLogByuser(localStorage.getItem('id')).then((res)=>{
       this.logListData = res.result;
     })
-    getLogList({id:this.userData.id,updateUserId:this.userData.id}).then((res)=>{
+    getLogList({param:{id:this.userData.id,updateUserId:this.userData.id}}).then((res)=>{
       this.fixedLogListData = res.result.list
+    })
+    getCollectLogByuser(this.userData.id).then((res)=>{
+      this.collectLogListData = res.result
     })
   },
   methods: {
@@ -179,8 +212,9 @@ export default {
       }
     },
 
-    // 获取用户所有文章
-
+    handleClick(id,title){
+      this.$router.push(`/addLogList?id=${id}&title=${title}`)
+    },
     // 修改信息
     againLogon() {
       if (this.form.password.length > 0 && this.form.password === this.form.confirmPassword) {
