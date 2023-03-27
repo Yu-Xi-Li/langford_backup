@@ -8,7 +8,10 @@
           <Header/>
         </el-header>
         <el-main>
-          <router-view></router-view>
+          <el-empty v-if="this.$route.path.length < 3" description="欢迎使用蔬菜种植技术动态查询系统~"></el-empty>
+          <router-view v-else></router-view>
+
+          
         </el-main>
       </el-container>
     </el-container>

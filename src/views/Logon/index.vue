@@ -16,7 +16,7 @@
             <el-input type="password" v-model.trim="form.confirmPassword" placeholder="请再次输入密码"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="register">注册</el-button>
+            <el-button type="primary" style="margin-right: 50px;" @click="register">注册</el-button>
             <router-link to="/login"><el-button>返回登录</el-button></router-link>
           </el-form-item>
         </el-form>
@@ -83,13 +83,18 @@ import { link } from 'fs';
                 }).then(data => {
                     if(data.code === 0){
                         this.$message({
-                            message:'登录成功,2秒后跳转登录页面',
+                            message:'注册成功,2秒后跳转登录页面',
                             type: 'success'
                         })
                         setTimeout(() => {
                             this.$router.push('/login')
                         }, 2000);
-                    };
+                    }else{
+                      this.$message({
+                            message:'注册失败,错误原因:'+data.message,
+                            type: 'success'
+                        })
+                    }
                 });
             };
         }

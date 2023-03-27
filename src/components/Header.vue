@@ -7,12 +7,12 @@
           <h4>{{isHeaderName}}</h4>
       </div>
       <div class="content-2">
-          <el-dropdown trigger="click" size="mini">
+          <el-dropdown @command="loginOut" size="mini">
               <span>
                   <img class="userImg" :src="userImg" alt="">
               </span>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click="loginOut()">退出</el-dropdown-item>
+                    <el-dropdown-item>退出</el-dropdown-item>
                 </el-dropdown-menu>
           </el-dropdown>
       </div>
@@ -37,7 +37,7 @@ export default {
         },
         loginOut(){
             localStorage.clear();
-            this.router.push('/login')
+            this.$router.push('/login')
         }
     },
     computed: {

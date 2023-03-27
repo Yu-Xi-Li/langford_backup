@@ -9,8 +9,8 @@
                 <el-form-item label="密码" prop="password">
                     <el-input type="password" v-model.trim="form.password" placeholder="请输入密码"></el-input>
                 </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="login()">登录</el-button>
+                <el-form-item  >
+                    <el-button style="margin-right: 50px;" type="primary" @click="login()">登录</el-button>
                     <router-link to="/logon"><el-button>注册</el-button></router-link>
                 </el-form-item>
             </el-form>
@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import { log } from 'console';
 import { userLogin } from '../../../api/data'
 export default {
     data() {

@@ -124,6 +124,14 @@ export default {
           if(res.code == 0){
             this.selectedType = '',
             this.newItem= '',
+            this.summitData={
+              "diseaseInfo": [],
+              "fertilizerInfo": [],
+              "insectInfo": [],
+              "soilInfo": [],
+              "vegetableInfo": [],
+              "waterInfo": []
+            }
             this.$message({
               type: 'success',
               message: '新增成功，请等待审核通过'

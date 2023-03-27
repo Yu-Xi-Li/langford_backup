@@ -184,10 +184,10 @@ export default {
   },
   mounted() {
     getLogByuser(localStorage.getItem('id')).then((res)=>{
-      this.logListData = res.result;
+      this.logListData = res.result.filter(item => item.userId == localStorage.getItem('id'))
     })
     getLogList({param:{id:this.userData.id,updateUserId:this.userData.id}}).then((res)=>{
-      this.fixedLogListData = res.result.list
+      this.fixedLogListData = res.result.list.filter(item=>item.updateUserId == localStorage.getItem("id"))
     })
     getCollectLogByuser(this.userData.id).then((res)=>{
       this.collectLogListData = res.result

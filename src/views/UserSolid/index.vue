@@ -1,5 +1,5 @@
 <template>
-  <div class="firstCard">
+  <div v-if=this.isWYH class="firstCard">
     <el-card :body-style="{ padding: '20px 20px 0 20px' }">
       <div slot="header">
         <span>修改的文章</span>
@@ -21,6 +21,9 @@
       </el-table>
     </el-card>
   </div>
+  <div v-else>
+    <el-empty description="您不是委员会成员哦，请联系负责人申请~"></el-empty>
+  </div>
 </template>
 
 <script>
@@ -28,7 +31,13 @@ import { getLogList, auditLog } from '../../../api/data'
 export default {
   data(){
     return {
-      successLogListData:[]
+      successLogListData:[],
+      isWYH: false
+    }
+  },
+  created(){
+    if(localStorage.getItem('committee') == 1){
+      this.isWYH = true
     }
   },
   mounted(){

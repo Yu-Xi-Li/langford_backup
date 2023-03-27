@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if=this.isADM>
     <el-table :data="tableData" style="width: 100%">
       <el-table-column prop="id" label="ID"></el-table-column>
       <el-table-column prop="accountNumber" label="账号"></el-table-column>
@@ -17,13 +17,22 @@
       </el-table-column>
     </el-table>
   </div>
+  <div v-else>
+    <el-empty description="您不是管理员哦，请联系负责人申请~"></el-empty>
+  </div>
 </template>
 <script>
 import {getAllUserInfo, userAgainLogon} from '../../../api/data'
 export default {
   data() {
     return {
-      tableData: []
+      tableData: [],
+      isADM: false
+    }
+  },
+  created(){
+    if(localStorage.getItem('administrator') == 1){
+      this.isADM = true
     }
   },
   mounted() {
@@ -31,7 +40,7 @@ export default {
   },
   methods:{
     getNoPassUser(){
-      getAllUserInfo().then(res => {
+      getAllUserInfo({pageSize:200}).then(res => {
         this.tableData = res.result.list.filter(item => item.committeeAuditState == 0)
       })
     },

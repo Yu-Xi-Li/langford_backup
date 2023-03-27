@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex;">
+  <div v-if=this.isWYH style="display: flex;">
     <el-card style="width: 100%;margin:20px;justify-content: space-between">
       <el-table style="margin:20px 0" :data="tableData.fertilizerInfo.filter(item => item.auditStatus == 0)" border>
         <el-table-column prop="id" label="ID"></el-table-column>
@@ -82,6 +82,9 @@
     </el-card>
 
   </div>
+  <div v-else>
+    <el-empty description="您不是委员会成员哦，请联系负责人申请~"></el-empty>
+  </div>
 </template>
 <script>
 import { log } from 'console';
@@ -90,6 +93,7 @@ export default {
   data() {
     return {
       tableData: {},
+      isWYH: false,
       summitData:{
         "diseaseInfo": [],
         "fertilizerInfo": [],
@@ -99,6 +103,11 @@ export default {
         "waterInfo": []
       },
     };
+  },
+  created(){
+    if(localStorage.getItem('committee') == 1){
+      this.isWYH = true
+    }
   },
   mounted() {
     getFoundInfoList().then((res) => {

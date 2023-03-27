@@ -12,11 +12,22 @@
       }
     },
     created(){
-
+      this.loginOut()
     },
     methods:{
       getLoginData(){
         localStorage.getItem('user')
+      },
+      loginOut(){
+        if(!localStorage.getItem('id')){
+          localStorage.clear();
+          this.$router.replace('/login')
+          history.pushState(null, null, document.URL);
+          this.$message({
+            type: 'error',
+            message: '登录失效，请重新登录'
+          })
+        }
       }
     }
   }

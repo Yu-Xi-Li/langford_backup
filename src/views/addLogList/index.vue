@@ -52,7 +52,7 @@
         </div>
         <div>
           <div class="message-board">
-            <el-form ref="form" :model="messageForm" :rules="rules" label-width="80px">
+            <el-form ref="messageForm" :model="messageForm" :rules="rules" label-width="80px">
               <el-form-item label="留言" prop="message">
                 <el-input v-model="messageForm.message"></el-input>
               </el-form-item>
@@ -63,8 +63,8 @@
             <el-divider />
             <el-card class="message-item" v-for="(item, index) in messageList" :key="index">
               <div class="message-info">
-                <div class="message-account">{{ item.userAccount }}</div>
-                <div class="message-content">{{ item.message }}</div>
+                <div class="message-account">{{ item.name }}：</div>
+                <div style="text-indent:2em;" class="message-content">{{ item.message }}</div>
               </div>
             </el-card>
           </div>
@@ -75,7 +75,7 @@
     </div>
   </template>
   <script>
-import {getFoundInfoList, addLog, getLogDetail, updateLog, addCollect, getCollectLogByuser, deleteCollect} from '../../../api/data'
+import {getFoundInfoList, addLog, getLogDetail, updateLog, addCollect, getCollectLogByuser, deleteCollect, addMessage} from '../../../api/data'
   export default {
     data() {
       return {
@@ -109,8 +109,7 @@ import {getFoundInfoList, addLog, getLogDetail, updateLog, addCollect, getCollec
         },
         messageList: [], // 留言列表
         rules: {
-          message: [{ required: true, message: '请输入留言', trigger: 'blur' }],
-          userAccount: [{ required: true, message: '请输入账号', trigger: 'blur' }],
+          message: [{ required: true, message: '请输入留言', trigger: 'blur' }]
         },
 
       };
@@ -136,12 +135,12 @@ import {getFoundInfoList, addLog, getLogDetail, updateLog, addCollect, getCollec
         }
         getFoundInfoList().then((res)=>{
             const data = res.result
-            this.options.disease = data.diseaseInfo
-            this.options.fertilizer = data.fertilizerInfo
-            this.options.insect = data.insectInfo
-            this.options.soil = data.soilInfo
-            this.options.vegetable = data.vegetableInfo
-            this.options.water = data.waterInfo
+            this.options.disease = data.diseaseInfo.filter(item=>item.auditStatus == 1)
+            this.options.fertilizer = data.fertilizerInfo.filter(item=>item.auditStatus == 1)
+            this.options.insect = data.insectInfo.filter(item=>item.auditStatus == 1)
+            this.options.soil = data.soilInfo.filter(item=>item.auditStatus == 1)
+            this.options.vegetable = data.vegetableInfo.filter(item=>item.auditStatus == 1)
+            this.options.water = data.waterInfo.filter(item=>item.auditStatus == 1)
         })
         // 掉一下收藏接口以判断用户是否收藏
         getCollectLogByuser(localStorage.getItem("id")).then((res)=>{
@@ -157,9 +156,15 @@ import {getFoundInfoList, addLog, getLogDetail, updateLog, addCollect, getCollec
     },
     methods: {
       submitMessageForm() {
-        this.$refs.form.validate((valid) => {
+        this.$refs.messageForm.validate((valid) => {
           if (valid) {
             // 新增留言
+            addMessage({
+              message: this.messageForm.message,
+              userAccount: localStorage.getItem('accountNumber'),
+              articleId: this.$route.query.id, // 文章ID
+              name: localStorage.getItem('name'),
+            });
             this.messageList.push({
               message: this.messageForm.message,
               userAccount: localStorage.getItem('accountNumber'),
@@ -168,7 +173,6 @@ import {getFoundInfoList, addLog, getLogDetail, updateLog, addCollect, getCollec
             });
             // 清空留言表单
             this.messageForm.message = '';
-            this.messageForm.userAccount = '';
           } else {
             return false;
           }
