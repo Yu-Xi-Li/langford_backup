@@ -35,9 +35,19 @@ const routes = [
         component: () => import('../views/LogList/index')
       },
       {
-        path: '/addLogList',
-        name: 'addLogList',
-        component: () => import('../views/addLogList/index')
+        path: '/LogListDetail',
+        name: 'LogListDetail',
+        component: () => import('../views/LogListDetail/index')
+      },
+      {
+        path: '/Experts',
+        name: 'Experts',
+        component: () => import('../views/Experts/index')
+      },
+      {
+        path: '/Consulting',
+        name: 'Consulting',
+        component: () => import('../views/Consulting/index')
       },
       {
         path: '/Sponsor',

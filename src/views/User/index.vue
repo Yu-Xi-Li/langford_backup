@@ -213,7 +213,7 @@ export default {
     },
 
     handleClick(id,title){
-      this.$router.push(`/addLogList?id=${id}&title=${title}`)
+      this.$router.push(`/LogListDetail?id=${id}&title=${title}`)
     },
     // 修改信息
     againLogon() {

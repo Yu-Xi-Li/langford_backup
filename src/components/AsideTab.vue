@@ -29,7 +29,7 @@
             name: 'User',
             label: '个人中心',
             icon: 'user',
-            url: 'User/User',
+            url: 'User',
             index: '1'
           },
           {
@@ -37,38 +37,54 @@
             name: 'LogList',
             label: '内容中心',
             icon: 'video-play',
-            url: 'LogList/LogList',
+            url: 'LogList',
             index: '2'
+          },
+          {
+            path: '/Experts',
+            name: 'Experts',
+            label: '专家信息',
+            icon: 'video-play',
+            url: '/Experts',
+            index: '3'
+          },
+          {
+            path: '/Consulting',
+            name: 'Consulting',
+            label: '资讯中心',
+            icon: 'video-play',
+            url: '/Consulting',
+            index: '4'
           },
           {
             path: '/BaseInfo',
             name: 'BaseInfo',
             label: '基础信息管理',
             icon: 'medal',
-            url: 'BaseInfo/BaseInfo',
-            index: '3'
+            url: 'BaseInfo',
+            index: '5'
           },
           {
             path: '/Sponsor',
             name: 'Sponsor',
             label: '委员会申请',
             icon: 'notebook-2',
-            url: 'Sponsor/Sponsor',
-            index: '4'
+            url: 'Sponsor',
+            index: '6'
           },
           {
             path: '/Account',
             name: 'Account',
             label: '居委会审核',
             icon: 'tickets',
-            url: 'Account/Account',
-            index: '5'
+            url: 'Account',
+            index: '7'
           },
           {
             label: '信息审核',
             name: 'Setting',
             icon: 'setting',
-            index: '6',
+            index: '8',
             children: [
               {
                 path: 'Setting/UserSolid',
@@ -76,7 +92,7 @@
                 label: '文章审核',
                 icon: 'user-solid',
                 url: 'Setting/UserSolid',
-                index: '6-1'
+                index: '8-1'
               },
               {
                 path: 'Setting/MenuSetting',
@@ -84,7 +100,7 @@
                 label: '基础信息审核',
                 icon: 'menu',
                 url: 'Setting/MenuSetting',
-                index: '6-2'
+                index: '8-2'
               }
             ]
           }

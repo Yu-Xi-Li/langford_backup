@@ -45,10 +45,10 @@ export default {
   },
   methods: {
     goDetail(id,title){
-        this.$router.push(`/addLogList?id=${id}&title=${title}`)
+        this.$router.push(`/LogListDetail?id=${id}&title=${title}`)
       },
     goAddLog() {
-      this.$router.push(`/addLogList`)
+      this.$router.push(`/LogListDetail`)
     }
   },
 };
