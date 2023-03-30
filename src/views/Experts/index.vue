@@ -1,5 +1,5 @@
 <template>
-  <div class="flex_row" style="margin: 50px auto; width: 80%; flex-wrap: wrap;">
+  <div class="flex_row" style="margin: 20px auto; width: 80%; flex-wrap: wrap;">
     <el-card shadow="always" style="max-width:800px; margin: 40px 35px;" :body-style="{ padding: '20px' }">
       <div slot="header">
         <span>蔬菜育种专家</span>
@@ -136,24 +136,24 @@
     </el-card>
     <el-card shadow="always" style="max-width:500px; margin: 40px 35px;" :body-style="{ padding: '20px' }">
       <div slot="header">
-        <span>蔬菜基地专家</span>
+        <span>高级农艺师</span>
       </div>
       <div class="flex_row" >
         <div style="margin-right: 20px;">
-          <img width="120" height="150" src="http://img8.agronet.com.cn/ad/2012/1/11/20121111441107179.jpg" alt="邵战功">
+          <img width="120" height="150" src="http://css.agronet.com.cn/Agronet/images/NoImg.jpg" alt="赵道春">
         </div>
         <div class="flex_column" style="height: 150px;width: 220px;">
           <div>
-            专家姓名：唐懋华 性别：女<br>
-            技术职称：推广研究员 年龄：40<br>
-            所在地区：南京市<br>
-           【专业方向】蔬菜 <br>
-           【技术服务】本科学历，从事土壤肥料...
+            专家姓名：赵道春 性别：男<br>
+            技术职称：植保员 年龄：26<br>
+            所在地区：昆明市<br>
+           【专业方向】蔬菜栽培 <br>
+           【技术服务】赵道春，男，专业从事...
           </div>
           <div class="flex_row">
-            <a target="_blank" href="http://www.vegnet.com.cn/Expert/97.html">&gt; 专家介绍</a>
-            <a target="_blank" href="http://www.vegnet.com.cn/Expert/97/Research.html">&gt;研究成果</a>
-            <a target="_blank" href="http://www.vegnet.com.cn/Expert/97/Ask.html">&gt; 我要咨询</a>
+            <a target="_blank" href="http://www.vegnet.com.cn/Expert/257.html">&gt; 专家介绍</a>
+            <a target="_blank" href="http://www.vegnet.com.cn/Expert/257/Research.html">&gt;研究成果</a>
+            <a target="_blank" href="http://www.vegnet.com.cn/Expert/257/Ask.html">&gt; 我要咨询</a>
           </div>
         </div>
       </div>
@@ -186,5 +186,8 @@ a{
   color: #888;
   margin: 5px;
 }
+a:hover{
+    color: #8ea8ff;
+  }
 
 </style>
